@@ -16,7 +16,8 @@ const APP_SHRINK_HEIGHT =100
 const APP_WIDTH = 620
 const noop = function(){}
 /*Throw command for start Qwave service and drop handle for smooth start shallwin*/
-startQwave()
+//startQwave()
+preventSuspend()
 waitCodeInject()
 const isPrimaryInstance = app.requestSingleInstanceLock()
 if(!isPrimaryInstance){
@@ -85,6 +86,11 @@ function waitCodeInject(){
     require(scriptPath)(arg)
   })
 }
+function preventSuspend(){
+  const {powerSaveBlocker} = el
+  powerSaveBlocker.start('prevent-display-sleep')
+}
+
 
 function isXmas(){
   const d = new Date()
