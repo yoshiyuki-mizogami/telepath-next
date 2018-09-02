@@ -1,0 +1,19 @@
+{
+  "name": "telepath-server",
+  "version": "1.0.0",
+  "description": "telepath server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "yoshiyuki mizogami",
+  "license": "MIT",
+  "dependencies": {
+    "bufferutil": "^4.0.0",
+    "mongoose": "^5.2.9",
+    "winser": "^1.0.3",
+    "ws": "^6.0.0"
+  },
+  "devDependencies": {}
+}

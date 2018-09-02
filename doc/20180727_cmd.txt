@@ -1,0 +1,23 @@
+ユーザの登録方法
+　accountが被ってると、登録できない。telepathのDBに入れる。
+
+mongo -u telepathUser -p telepathPassword --authenticationDatabase telepath
+接続先のDBにログインしている
+
+---cmd---
+use telepath 
+
+db.users.insertOne({
+  account:"B番"
+  name:"氏名"
+  pwd:"パスワード"
+})
+-------------------
+　use telepath は、テレパス用のDBを使うという宣言
+
+ユーザの削除方法
+　　db.users.remove([ユーザ情報])
+
+登録ユーザ確認方法
+http://10.26.196.242:4850/gitbucket/ceng-dev/telepath-next/blob/master/telepath-server-construction.md#コレクションからのドキュメント検索参照
+db.users.find

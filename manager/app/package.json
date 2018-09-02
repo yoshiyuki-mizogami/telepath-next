@@ -1,0 +1,14 @@
+{
+  "name": "telepath-next-manager",
+  "version": "1.7.0",
+  "caption":"TelepathManager",
+  "description": "TelepathNext management tool\ncan use only system dev members.",
+  "main": "index.html",
+  "author": "yoshiyuki mizogami",
+  "license": "MIT",
+  "icon":"favicon.png",
+  "window":{
+    "height":1000,
+    "width:":1000
+  }
+}

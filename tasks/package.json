@@ -1,0 +1,17 @@
+{
+  "name": "telepath-tasks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "archive.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yoshiyuki mizogami",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.4.11",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.1"
+  }
+}

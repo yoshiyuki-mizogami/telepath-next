@@ -1,0 +1,11 @@
+const {ipcMain} = require('electron')
+const {basename,join} = require('path')
+const {tmpdir} = require('os')
+const {spawn} = require('child_process')
+const unput = join(__dirname , '..', 'bin', 'unput.exe')
+ipcMain.on('unprotect-fileshell', (ev, filepath,responseEventName)=>{
+  const filename = basename(filepath)
+  const tmpFile = join(tmpdir(), filename)
+  const cp = spawn(unput,[filepath, tmpFile])
+  cp.on('close', ()=>ev.sender.send(responseEventName, tmpFile))
+})

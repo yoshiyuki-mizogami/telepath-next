@@ -1,0 +1,40 @@
+PC：243
+D:telepath-next-server/server/files
+
+★添付ファイル
+filesの中にある
+
+show collections
+-> collectionsの中にfilesがある
+
+db.files.findOne()
+→　_id　がシリアルID
+  nameがファイル名。
+ 
+ 
+filesの中のファイルを移行しないと、添付ファイルが見れなくなる。
+
+★icon
+server/root/icons
+
+ユーザ情報にicon情報はない。
+ファイルとして別で管理している。
+
+iconsの中のファイルも、移行時に、持っていくのを忘れずに。
+
+★サービスに登録する方法
+winserというライブラリを使用(package.jsonに記載)
+
+管理者権限のcmd
+globalにwinserをインストールしてないので、下記で実行する
+node_modules\.bin\winser
+
+サービスから登録する方法
+node_modules\.bin\winser --install --name telepath-naxt --startcmd "npm run boot-server"
+node_modules\.bin\winser --install --name [サービス名] --startcmd
+
+--displayname はoption。　無ければ、nameになる　入れると、表示名が設定できる
+
+サービスから削除する方法
+node_modules\.bin\winser --remove --name "telepath-naxt"
+ 

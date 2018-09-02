@@ -1,0 +1,30 @@
+:root{
+  --p-bg:black;
+  --p-even-bg:rgb(30,30,30);
+  --p-high-bg:rgb(150,150,150);
+  --s-bg:rgb(60,60,60);
+  --s-high-bg:rgb(200,200,200);
+  --t-bg:rgb(68, 36, 68);
+  --t-high-bg:rgb(168, 136, 168);
+  --f-bg:#032D2A;
+  --f-high-bg:rgb(114, 29, 18);
+  --ms-bg:#143526;
+  --ms-color:white;
+  --ms-unread:rgb(116, 0, 0);
+  --ms-a-color:lightblue;
+  --ms-mine:#231A47;
+  --ms-imp:#9c7300;
+  --p-color:white;
+  --s-color:white;
+  --t-color:white;
+  --f-color:white;
+  --n-color:#003242;
+  --r-color:darkgray;
+  --i-bg:rgb(22, 35, 35);
+  --i-high:rgb(102,29,0);
+  --i-s-bg:#CDC9C9;
+  --b-bg:black;
+  --b-color:white;
+  --b-high:#003242;
+  --at-color:rgb(255, 100, 150);
+}

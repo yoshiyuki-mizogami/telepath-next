@@ -1,0 +1,46 @@
+{
+  "name": "telepath-next",
+  "version": "0.2.0",
+  "managerVersion": "1.0.0",
+  "description": "telepath next generation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "boot-server": "node server/server.js",
+    "deploy": "gulp deploy && gulp deploy-sp"
+  },
+  "keywords": [
+    "telepath",
+    "message",
+    "app"
+  ],
+  "author": "yoshiyuki mizogmai",
+  "license": "MIT",
+  "dependencies": {
+    "dexie": "^2.0.4",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "vue": "^2.5.17",
+    "vuedraggable": "^2.16.0",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "asar": "^0.14.3",
+    "css-loader": "^1.0.0",
+    "del": "^3.0.0",
+    "electron": "^3.0.0-beta.5",
+    "electron-builder": "^20.28.1",
+    "file-loader": "^1.1.11",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.4.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "mongodb": "^3.1.3",
+    "run-sequence": "^2.2.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "vue-devtools": "^4.1.4",
+    "vue-loader": "^15.3.0",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.16.5"
+  }
+}

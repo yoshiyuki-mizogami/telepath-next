@@ -1,0 +1,30 @@
+:root{
+  --p-bg:black;
+  --p-even-bg:rgb(161, 161, 161);
+  --p-high-bg:rgb(238, 238, 238);
+  --s-bg:rgb(61, 61, 61);
+  --s-high-bg:rgb(136, 136, 136);
+  --t-bg:rgb(114, 114, 114);
+  --t-high-bg:rgb(129, 129, 129);
+  --f-bg:rgb(12, 12, 12);
+  --f-high-bg:rgb(73, 73, 73);
+  --ms-bg:rgb(201, 201, 201);
+  --ms-color:rgb(0, 0, 0);
+  --ms-unread:rgb(226, 226, 226);
+  --ms-a-color:rgb(163, 163, 163);
+  --ms-mine:rgb(126, 126, 126);
+  --ms-imp:rgb(255, 255, 255);
+  --p-color:rgb(255, 255, 255);
+  --s-color:rgb(0, 0, 0);
+  --t-color:rgb(0, 0, 0);
+  --f-color:rgb(255, 248, 248);
+  --n-color:#000000;
+  --r-color:rgb(70, 70, 70);
+  --i-bg:rgb(182, 182, 182);
+  --i-high:rgb(255, 255, 255);
+  --i-s-bg:rgb(160, 160, 160);
+  --b-bg:rgb(189, 189, 189);
+  --b-color:rgb(65, 65, 65);
+  --b-high:#ebebeb;
+  --at-color:rgb(0, 0, 0);
+}

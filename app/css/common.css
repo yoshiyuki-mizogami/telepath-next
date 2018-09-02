@@ -1,0 +1,286 @@
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 6px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background:rgb(200,200,200);
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+:root{
+  --connect-color:rgb(80, 224, 80);
+  --disconnect-color:rgb(120,120,120);
+  --idle-color: rgb(255, 157, 11);
+}
+html,body{
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Meiryo;
+  overflow:hidden;
+}
+pre{
+  margin:0;
+}
+code{
+  font-family:consolas;
+}
+div, input, button, select, textarea,img{
+  box-sizing:border-box;
+  font-family:Meiryo;
+  margin:0;
+}
+.bar{
+  height:20px;
+}
+div{
+  padding:0;
+}
+input, button, select, textarea{
+  padding:0px 4px;
+  outline:none;
+}
+input[type=text],input[type=password]{
+  background-color:rgb(240,240,240);
+  border:none;
+}
+input[type=button], button{
+  cursor:pointer;
+  border:solid 1px lightgray;
+  border-radius:2px;
+}
+input[type=button]:hover, button:hover{
+  background-color:rgb(255,200, 200)
+}
+textarea{
+  resize:none;
+}
+input,select, textarea{
+  outline:none;
+}
+.layer-cover{
+  position:fixed;
+  top:0;
+  left:0;
+  height:100%;
+  width:100%;
+  z-index:1000;
+  background-color:rgba(100,100,100,0.5);
+}
+.layer-enter-active, .layer-leave-active{
+  transition:opacity .3s ease;
+  opacity:1
+}
+.layer-enter, .layer-leave-to{
+  opacity:0;
+}
+
+.hljs{
+  margin-bottom:2px;
+}
+.revoked{
+  background-color:rgb(40,40,40);
+  width:100%;
+  text-align:center;
+  color:white;
+}
+
+.close{
+  float:right;
+  height:20px;
+  width:20px;
+  font-size:20px;
+  border:none;
+  background-color:transparent;
+  color:gray;
+  transition:color 0.3s ease;
+  font-weight:bold;
+  cursor:pointer;
+}
+.close:hover{
+  background-color:transparent;
+  color:darkgray;
+}
+
+
+input[type=button], button{
+  background-color:var(--i-bg);
+  border-color:var(--p-bg);
+  color:var(--p-color);
+}
+input[type=button]:hover, button:hover{
+  background-color:var(--i-high);
+}
+input[type=text],textarea{
+  background-color: var(--i-s-bg);
+}
+#pointer-canvas .cursor {
+  fill: var(--s-bg);
+}
+.bar .unread-message{
+  color:var(--s-color);
+}
+.bar .menu-btn{
+  background-color:var(--t-bg);
+  color:var(--p-color);
+}
+
+.left-pane{
+  background-color:var(--s-bg);
+}
+.left-pane .favorites{
+  background-color:var(--p-bg);
+}
+.left-pane .favorites .favorite{
+  background-color: var(--t-bg);
+  color:var(--t-color);
+}
+.left-pane .favorites .favorite:hover{
+  background-color: var(--t-high-bg);
+}
+.messages {
+  background-color: var(--p-bg);
+}
+.input .funcs {
+  background-color: var(--s-bg);
+}
+.input .send-btn{
+  background-color:var(--b-bg);
+  color:var(--b-color);
+}
+.input .send-btn:hover {
+  background-color: var(--b-high);
+}
+.reply-form {
+  background-color: var(--p-bg);
+}
+.login-form {
+  background-color:var(--f-bg);
+  color:var(--f-color);
+}
+.login-form .header{
+  background-color: var(--s-bg);
+}
+.notify{
+  border-color:var(--p-color);
+  background-color:var(--p-high-bg);
+}
+.teams .team{
+  background-color:var(--f-bg);
+  color:var(--f-color);
+}
+.teams .team.selected {
+  background-color: var(--f-high-bg);
+}
+.menu{
+  background-color: var(--p-bg);
+  color:var(--p-color);
+}
+.menu-item:hover {
+  background-color: var(--p-high-bg);
+  color:var(--p-color);
+}
+.model-cover .setting-view, .model-cover .personal-info-view {
+  background-color: var(--p-bg);
+  color:var(--p-color);
+}
+.model-cover .section .prop{
+  background-color: var(--t-bg) !important;
+}
+.model-cover .personal-info-view .caution{
+  color:var(--at-color);
+}
+.model-cover .section .lang-item.selected,
+.model-cover .section .font-item.selected {
+  color:var(--n-color);
+}
+.selected-teams {
+  background-color: var(--t-bg);
+  color:var(--t-color);
+}
+
+.m{
+  background-color: var(--ms-bg);
+}
+.m .sender-name{
+  color:var(--ms-color);
+}
+.m .header-right{
+  color:var(--ms-color);
+}
+.m .read{
+  background-color:var(--p-bg);
+  color:var(--p-color);
+}
+.m.is-mine{
+  background-color:var(--ms-mine);
+}
+.m.unread{
+  background-color: var(--ms-unread);
+}
+.m.imp {
+  background-color: var(--ms-imp) !important;
+}
+.m .content-frame{
+  background-color:var(--p-bg);
+  color:var(--p-color);
+}
+.m .content-frame a{
+  color:var(--ms-a-color);
+}
+.file-attacher{
+  background-color:var(--p-bg);
+}
+.file-attacher .attachies{
+  background-color:var(--s-bg);
+  color:var(--s-color);
+}
+
+#message-detail, #team-detail{
+  color:var(--p-color);
+}
+#message-detail .from-wrap{
+  background-color: var(--f-bg);
+}
+#message-detail .message-content{
+  background-color: var(--p-bg);
+}
+#message-detail .reads{
+  background-color: var(--s-bg);
+}
+#message-detail .reads .read{
+  background-color: var(--p-bg);
+}
+#message-detail .reads .read:nth-child(even) {
+  background-color: var(--p-even-bg);
+}
+
+#team-detail{
+  background-color:var(--p-bg);
+}
+#team-detail .users .user:nth-child(even) {
+  background-color: var(--p-even-bg);
+}
+
+.m .content-frame .content{
+  font-size:var(--global-font-size);
+  line-height:var(--global-line-height);
+}
+.text-center{
+  text-align:center;
+}
+
+.trip{
+  display:inline-block;
+  height:256px;
+  width:256px;
+  background-image:url('../img/trip._png');
+  background-repeat:no-repeat;
+}

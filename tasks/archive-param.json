@@ -1,0 +1,11 @@
+{
+  "mongoServer":"10.26.196.243",
+  "deployDir":"D:/telepath-archive",
+  "archiveDir":"D:/telepath-archive",
+  "archiveLimitDay":25,
+  "account":{
+    "user":"telepathUser",
+    "pwd":"telepathPassword"
+  },
+  "archiveFileCountLimit":60
+}

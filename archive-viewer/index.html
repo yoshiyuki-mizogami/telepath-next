@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="lib/handlebars.js"></script>
+  <script src="lib/moment.js"></script>
+  <title>Telepath archive viewer</title>
+</head>
+<style>
+  html,body{
+    padding:0px 15px;
+    margin:0;
+    font-family:'メイリオ';
+  }
+  .title{
+    font-size:25px;
+    font-weight:bold;
+  }
+  .children{
+    margin-left:15px;
+  }
+  .message{
+    margin-left:15px;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  .mh{
+    font-size:12px;
+    color:gray;
+  }
+  .m{
+    padding:3px;
+    border-bottom:solid 1px skyblue;
+    border-left:solid 1px skyblue;
+    margin-top:2px;
+  }
+  .cm{
+    padding:3px;
+    border-bottom:solid 1px blue;
+    border-left:solid 1px blue;
+  }
+  .revoked{
+    background-color:rgb(211,211,211);
+  }
+</style>
+<body>
+  <div class="title">Telepath next json parser</div>
+  <div class="content">Drop message.json</div>
+  <script type="text/x-handlbars-template" id="tmpl">
+    <div class="range">
+      <span>{{datetimeFormat from}}</span> - <span>{{datetimeFormat to}}</span>
+    </div>
+    {{#each messages}}
+    <div>
+      <div class="m{{#if revoked}} revoked{{/if}}">
+          <span class="mh">{{datetimeFormat sendAt}} {{senderName}} to: {{#each destTeamNames}}{{this}}{{/each}}</span>
+        <div class="message">{{renderContent type content}}</div>
+      </div>
+      {{#if children}}
+        <div class="children">
+        {{#each children}}
+          <div class="cm{{#if revoked}} revoked{{/if}}">
+            <span class="mh">{{datetimeFormat sendAt}} {{senderName}}</span>
+            <div class="message">{{renderContent type content}}</div>
+          </div>
+        {{/each}}
+          </div>
+      {{/if}}
+    </div>
+    {{/each}}
+  </script>
+  <script>
+    let init = ()=>{
+      Handlebars.registerHelper('datetimeFormat', v=>{
+        return moment(v).format('YYYY-MM-DD HH:mm:ss')
+      })
+      Handlebars.registerHelper('renderContent', (type, v)=>{
+        if(type === 'html'){
+          return new Handlebars.SafeString(v)
+        }
+        return v
+      })
+      let src = document.querySelector('#tmpl').innerHTML
+      let tmpl = Handlebars.compile(src)
+      return tmpl
+    }
+    let tmpl = init()
+    let main = ()=>{
+      let de = document.documentElement
+      de.addEventListener('drop', ev=>{
+        ev.preventDefault()
+        ev.stopPropagation()
+        let [file] = ev.dataTransfer.files
+        let fl = new FileReader()
+        fl.addEventListener('load', (ev)=>{
+          let result = JSON.parse(ev.target.result)
+          let sends = result.map(r=>new Date(r.sendAt).getTime())
+          let to = Math.max(...sends)
+          let from = Math.min(...sends)
+          let value = {
+            from:from,
+            to:to,
+            messages: result
+          }
+          document.querySelector('.content').innerHTML = tmpl(value)
+        })
+        fl.readAsText(file)
+        return false
+      })
+      de.addEventListener('dragenter', ev=>{
+        ev.preventDefault()
+        ev.stopPropagation()
+        return false
+      })
+      de.addEventListener('dragover', ev=>{
+        ev.preventDefault()
+        ev.stopPropagation()
+        return false
+      })
+    }
+    main()
+  </script>
+</body>
+</html>

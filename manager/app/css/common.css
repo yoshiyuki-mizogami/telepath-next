@@ -1,0 +1,53 @@
+html,body{
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"メイリオ";
+  overflow:hidden;
+}
+pre{
+  margin:0;
+}
+code{
+  font-family:consolas;
+}
+div, input, button, select, textarea,img{
+  box-sizing:border-box;
+  font-family:"メイリオ";
+  margin:0;
+}
+div{
+  padding:0;
+}
+input, button, select, textarea{
+  padding:0px 4px;
+  outline:none;
+}
+input[type=button], button{
+  cursor:pointer;
+}
+textarea{
+  resize:none;
+}
+.layer-cover{
+  position:fixed;
+  top:0;
+  left:0;
+  height:100%;
+  width:100%;
+  z-index:1000;
+  background-color:rgba(100,100,100,0.5);
+}
+.layer-enter-active, .layer-leave-active{
+  transition:opacity .3s ease;
+  opacity:1
+}
+.layer-enter, .layer-leave-to{
+  opacity:0;
+}
+
+.hljs{
+  margin-bottom:2px;
+}
