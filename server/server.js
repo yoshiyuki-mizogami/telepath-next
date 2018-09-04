@@ -3,6 +3,8 @@ const path = require('path')
 const {spawn,exec} = require('child_process')
 const mongoose = require('mongoose')
 const share = require('./param.js')
+const os = require('os')
+
 console.log('db server:', share.mongoServer, 'ws server', share.wsServer)
 const TELEPATH_PORT = share.wsPort
 mongoose.Promise = global.Promise
@@ -29,9 +31,7 @@ function connectMongo(){
     .catch(console.error)
 }
 
-
 function bootNginx(){
-  const os = require('os')
   if(os.type() === 'Linux'){
     return
   }
