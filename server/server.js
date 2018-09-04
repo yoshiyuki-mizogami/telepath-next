@@ -31,6 +31,10 @@ function connectMongo(){
 
 
 function bootNginx(){
+  const os = require('os')
+  if(os.type() === 'Linux'){
+    return
+  }
   exec('taskkill.exe /f /im nginx.exe', ()=>{
     const nginx = path.join(__dirname, 'nginx', 'nginx.exe')
     spawn(nginx,{
