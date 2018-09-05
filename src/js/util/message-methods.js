@@ -53,7 +53,7 @@ export default {
       return this.$store.state.config.aggregateDests
     },
     iconUrl(){
-      return 'http://' + globals.IMAGE_SERVER + ':8080/icons/' + this.m.sender._id + '.png?' + this.m.iconCache
+      return 'http://' + globals.IMAGE_SERVER + ':80/icons/' + this.m.sender._id + '.png?' + this.m.iconCache
     },
     readCount(){
       const m = this.m

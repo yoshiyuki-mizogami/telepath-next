@@ -1,5 +1,5 @@
 import {version} from '../../package.json'
-import {wsServer, wsPort, imageServer} from '../../../server/share'
+import {wsServer, wsPort, imageServer} from '../../../server/param'
 const WS_PROTOCOL = 'wss://'
 export default {
   WS_PROTOCOL,

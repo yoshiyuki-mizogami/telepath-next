@@ -7,7 +7,7 @@ const {app, ipcMain} = el
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true//for electron2.x.x
 
 app.commandLine.appendSwitch('disable-http-cache')
-app.commandLine.appendSwitch('no-proxy-server')
+// app.commandLine.appendSwitch('no-proxy-server')
 app.commandLine.appendSwitch('ignore-certificate-errors')
 let mw
 let APP_HEIGHT = 725

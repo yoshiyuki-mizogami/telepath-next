@@ -111,7 +111,7 @@ export default {
   },
   computed:{
     iconUrl(){
-      return 'http://' + globals.IMAGE_SERVER + ':8080/icons/' + this.user._id + '.png?' + Date.now()
+      return 'http://' + globals.IMAGE_SERVER + ':80/icons/' + this.user._id + '.png?' + Date.now()
     },
     ui(){
       return this.$store.state.ui

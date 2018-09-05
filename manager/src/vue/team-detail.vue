@@ -56,7 +56,7 @@ export default {
   }),
   methods:{
     getIconUrl(u){
-      return 'http://' + globals.IMAGE_SERVER + ':8080/icons/' + u._id + '.png'
+      return 'http://' + globals.IMAGE_SERVER + ':80/icons/' + u._id + '.png'
     },
     addUser(){
       const lines = this.addUserAccount.split(/\r?\n/).map(l=>{

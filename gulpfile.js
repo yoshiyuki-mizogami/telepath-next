@@ -73,25 +73,24 @@ g.task('build', ['compile-product'],async ()=>{
   await del('./dist/nsis-web/**')
   const builder = require('electron-builder')
   return builder.build({
+    platform:'win32',
+    arch:'ia32',
     config:{
       asar:false,
-      productName:'TelepathNext',
+      productName:'TelepathNextCloud',
       directories:{
         app:'app',
         output:'dist'
       },
-      copyright:'Copyright © 2017 Yoshiyuki Mizogami',
+      copyright:'Copyright © 2018 Yoshiyuki Mizogami',
       win:{
-        target:['nsis-web'],
-        icon:'app/img/logo.ico'
-      },
-      nsisWeb:{
-        appPackageUrl:ATTACHMENT_DEST + 'latest',
-        artifactName:'Installer-TelepathNext.${ext}'
+        target:['nsis'],
+        icon:'app/img/logo.ico',
       },
       nsis:{
         oneClick:true,
-        shortcutName:'TelepathNext',
+        shortcutName:'TelepathNextCloud',
+        artifactName:'TelepathNextCloudInstaller.exe',
         installerIcon:'img/ins.ico',
         uninstallerIcon:'img/ins.ico'
       }

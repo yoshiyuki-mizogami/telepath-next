@@ -59,7 +59,7 @@ export default {
   },
   computed:{
     iconUrl(){
-      return `http://${IMAGE_SERVER}:8080/apps/${this.app.name}/icon.png`
+      return `http://${IMAGE_SERVER}:80/apps/${this.app.name}/icon.png`
     }
   },
   methods:{

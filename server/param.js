@@ -1,6 +1,6 @@
 const param = {
-  wsServer:'192.168.11.3',//optional
-  wsPort:10084,//require,
+  wsServer:'52.14.22.95',//optional
+  wsPort:443,//require,
   //mongoServer:'127.0.0.1',//require
   //imageServer:'192.168.11.3',//optional
   //localWsServer:'localhost'//optional

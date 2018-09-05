@@ -46,7 +46,7 @@ export default {
   },
   computed:{
     iconUrl(){
-      return `http://${IMAGE_SERVER}:8080/icons/${this.user._id}.png`
+      return `http://${IMAGE_SERVER}:80/icons/${this.user._id}.png`
     },
     debug(){
       return this.$store.state.debug
