@@ -3,7 +3,7 @@ require('./util/unprotect.js')
 const path = require('path')
 const el = require('electron')
 const setSendMessage = require('./util/set-send-message.js')
-const {app, ipcMain} = el
+const {app, ipcMain, BrowserWindow} = el
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true//for electron2.x.x
 
 app.commandLine.appendSwitch('disable-http-cache')
@@ -47,7 +47,6 @@ app.on('ready',()=>{
   if(dispHeight < APP_HEIGHT_CHANGE_BORDER){
     APP_HEIGHT -= APP_SHRINK_HEIGHT
   }
-  const {BrowserWindow} = el
   if(isDev){
     try{
       BrowserWindow.addDevToolsExtension(path.join(__dirname,'../node_modules/vue-devtools/vender'))
@@ -75,6 +74,30 @@ app.on('ready',()=>{
   const bootTlApp = require('./util/boot-tl-app.js')
   bootTlApp(mw)
   setSendMessage(mw)
+})
+let authed = false
+app.on('login', (ev, webContents, req, auth, callback)=>{
+  if(authed){
+    return
+  }
+  ev.preventDefault()
+  const loginWindow = new BrowserWindow({
+    height:120,
+    width:300,
+    modal:true,
+    parent:mw,
+    frame:false,
+    minimizable:false,
+    maximizable:false,
+    movable:false,
+    icon:path.join(rootdir,'img', iconName)
+  })
+  loginWindow.setMenuBarVisibility(false)
+  loginWindow.loadFile(path.join(__dirname, 'html', 'proxy-auth.html'))
+  ipcMain.on('proxy-auth', (ev, ...args)=>{
+    callback(...args)
+  })
+  authed = true
 })
 
 /*start qwave service for start shallwin to smooth*/

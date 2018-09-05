@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Proxy Auth</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <style>
+    #auth{
+      text-align:center;
+    }
+    input, button{
+      text-align:center;
+      font-size:15px;
+    }
+    input{
+      border-bottom:solid 1px gray !important;
+      margin-bottom:2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="auth">
+    <div>Input Proxy Authentication</div>
+    <div><input id="un" type="text" class="username" placeholder="Username"></div>
+    <div><input id="pw" type="password" class="password" placeholder="Password"></div>
+    <button id="login">Login</button>
+  </div>
+  <script>
+    const auth = localStorage.getItem('proxy-auth')
+    const authData = {
+      username:'',password:''
+    }
+    if(auth){
+      try{
+        Object.assign(authData, JSON.parse(auth))
+      }catch(e){
+        //ignore
+      }
+    }
+    const un = document.querySelector('#un')
+    un.value = authData.username
+    un.addEventListener('keydown', ({key})=>{
+      if(key !== 'Enter'){
+        return
+      }
+      login()
+    })
+    const pw = document.querySelector('#pw')
+    pw.value = authData.password
+    pw.addEventListener('keydown', ({key})=>{
+      if(key !== 'Enter'){
+        return
+      }
+      login()
+    })
+    const loginBtn = document.querySelector('#login')
+    loginBtn.addEventListener('click', login)
+    const {ipcRenderer} = require('electron')
+    function login(){
+      const username = un.value
+      const password = pw.value
+      if(!username || !password){
+        return
+      }
+      localStorage.setItem('proxy-auth', JSON.stringify({
+        username, password
+      }))
+      ipcRenderer.send('proxy-auth',
+        username,
+        password
+      )
+      close()
+    }
+  </script>
+</body>
+</html>
