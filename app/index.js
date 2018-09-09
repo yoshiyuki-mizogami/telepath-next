@@ -101,6 +101,7 @@ app.on('login', (ev, webContents, req, auth, callback)=>{
 })
 
 /*start qwave service for start shallwin to smooth*/
+//eslint-disable-next-line
 function startQwave(){
   require('child_process').exec('sc query qwave', noop)
 }
