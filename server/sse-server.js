@@ -79,7 +79,7 @@ class SSEServer extends events{
             break
           }
         }
-        method(this, tgClient, res, json)
+        await method(this, tgClient, res, json)
         if(!res.finished){
           res._end('')
         }

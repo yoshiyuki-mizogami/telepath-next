@@ -1,6 +1,6 @@
 const param = {
-  //server:'52.14.22.95',
-  server:'localhost',//optional
+  server:'ec2-52-14-22-95.us-east-2.compute.amazonaws.com',
+  //server:'localhost',//optional
   port:443,//require,
   imgPort:8080,
   //mongoServer:'127.0.0.1',//require
