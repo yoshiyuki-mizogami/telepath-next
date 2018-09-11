@@ -81,7 +81,7 @@ class SSEServer extends events{
         }
         method(this, tgClient, res, json)
         if(!res.finished){
-          res.end('')
+          res._end('')
         }
       })
     }).listen(port, ()=>{

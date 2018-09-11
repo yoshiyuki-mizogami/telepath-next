@@ -30,5 +30,4 @@ module.exports = async function login(server,cl, res, obj){
   res.end({
     logined:true
   })
-  return true
 }
