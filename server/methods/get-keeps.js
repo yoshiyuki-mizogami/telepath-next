@@ -1,10 +1,10 @@
 'use strict'
 const User = require('../user')
-module.exports = async (_, sock)=>{
-  const target = await User.findById(sock.userId)
+module.exports = async (_,cl)=>{
+  const target = await User.findById(cl.userId)
   /*same user other connection ignore*/
   await target.save()
-  sock.send({
+  cl.send({
     method:'gotKeeps',
     keeps:target.keeps
   })

@@ -1,7 +1,7 @@
 'use strict'
 const User = require('../user')
 const Team = require('../team')
-const requestTeamDetail = require('../actions/request-team-detail.js')
+const requestTeamDetail = require('../methods/request-team-detail.js')
 const logined = require('../actions/logined.js')
 module.exports = async (wss, sock, obj)=>{
   const u = await User.findById(obj.userId)

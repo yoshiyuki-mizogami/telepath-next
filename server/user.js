@@ -8,6 +8,9 @@ const UserSchema = new Schema({
     unique:true,
     sparse:true
   },
+  session:{
+    type:String
+  },
   name:{
     type:String,
     trim:true
@@ -51,11 +54,18 @@ const UserSchema = new Schema({
   version:String
 },{strict:false})
 UserSchema.virtual('iconCache').get(function(){
-  console.log(global.iconCacheQuery)
   return global.iconCacheQuery
 })
 UserSchema.statics.updateGlobalIconCache = function(){
   global.iconCacheQuery = Date.now()
+}
+UserSchema.statics.auth = function(cookie){
+  const authData = cookie.split(',').reduce((base, current)=>{
+    const [key,value] = current.split('=')
+    base[key] = value
+    return base
+  }, {})
+  return User.findOne(authData)
 }
 const User = mg.model('User', UserSchema)
 

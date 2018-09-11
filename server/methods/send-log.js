@@ -1,6 +1,6 @@
 'use strict'
-module.exports = (wss, sock, obj)=>{
-  const roots = Array.from(wss.clients).filter(c=>c.root)
+module.exports = (server, cl, res, obj)=>{
+  const roots = Array.from(server.clients).filter(c=>c.root)
   roots.forEach(r=>{
     r.send({
       method:'receiveLog',

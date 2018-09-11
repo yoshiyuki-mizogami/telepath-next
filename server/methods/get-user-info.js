@@ -1,9 +1,9 @@
 'use strict'
 const User = require('../user.js')
 const Team = require('../team.js')
-module.exports = async (wss, sock, obj)=>{
-  const {userId} = obj
-  const targetConnection =  Array.from(wss.clients).find(c=>{
+module.exports = async (server, cl)=>{
+  const {userId} = cl
+  const targetConnection =  Array.from(server.clients).find(c=>{
     return c.userId === userId && !c.root
   })
   let connected = false
@@ -18,7 +18,7 @@ module.exports = async (wss, sock, obj)=>{
   }).select('_id name')
   const user = await User.findOne({_id:userId})
     .catch(console.error)
-  sock.send({
+  cl.send({
     method:'gotUserInfo',
     user,
     teams,

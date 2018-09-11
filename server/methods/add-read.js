@@ -1,7 +1,7 @@
 'use strict'
 const Message = require('../message')
 const MESSAGE_READ_COUNT_LIMIT = 100
-module.exports = (wss, sock, obj)=>{
+module.exports = (server, cl, res, obj)=>{
   return Message.findOne({
     _id:obj.messageId
   }).select('parent sender readCount destTeams revoked forAll')
@@ -17,14 +17,14 @@ module.exports = (wss, sock, obj)=>{
       }
       const messageSenderId = message.sender.toString()
       const destTeams = dt.map(d=>d.toString())
-      if(!sock.userId){
+      if(!res.userId){
         console.log('socket user id not found')
         return
       }
-      message.addRead(sock.userId,obj.priority).then(read=>{
+      message.addRead(res.userId,obj.priority).then(read=>{
         /*return read user only*/
         if(message.revoked || MESSAGE_READ_COUNT_LIMIT < message.readCount){
-          sock.send({
+          cl.send({
             method:'increamentReadMessage',
             yours:true,
             message,
@@ -32,9 +32,9 @@ module.exports = (wss, sock, obj)=>{
           })
           return
         }
-        for(const c of wss.clients){
+        for(const c of server.clients){
           if(!c.userId || !c.teams){continue}
-          const yours = sock.userId === c.userId
+          const yours = res.userId === c.userId
           const teams = c.teams
           const isTarget = forAll || teams.some(t=>destTeams.includes(t))
           if(!isTarget && parentSenderId !== c.userId && messageSenderId !== c.userId){

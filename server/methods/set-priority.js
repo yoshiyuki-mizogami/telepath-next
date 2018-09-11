@@ -1,14 +1,14 @@
 'use strict'
 const Read = require('../read.js')
-module.exports = (wss, sock, obj)=>{
+module.exports = (server,cl, res, obj)=>{
   const objId = obj.id
   return Read.updateOne({
-    reader:sock.userId,
+    reader:cl.userId,
     message:objId
   },{
     priority:obj.priority
   }).then(()=>{
-    sock.send({
+    cl.send({
       method:'priorityUpdated',
       priority:obj.priority,
       id:objId

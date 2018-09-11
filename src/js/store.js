@@ -1,10 +1,12 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
+import url from 'url'
+
 import config from './config'
 import uiStrings from './ui-strings'
 import avoidNameSaveFile from './util/avoid-name-save-file.js'
 import el from 'electron'
-import ws from './ws-connection'
+import SSE from './sse-connection'
 import path from 'path'
 import Message from './classes/message'
 import gev from './g-event'
@@ -27,7 +29,7 @@ const SET_IDLE_TIME = 1000 * 60 * 4
 const LIMIT_APP_BIN_SIZE = 1024 * 1024 * 15// 15 Mib
 const {SORT_ORDER} = globals
 const {remote, ipcRenderer} = el
-const {Menu,protocol, app, dialog} = remote
+const {Menu, app, dialog} = remote
 const thisWindow = remote.getCurrentWindow()
 thisWindow.removeAllListeners('upload-tl-app')
 thisWindow.on('upload-tl-app', (data)=>{//for cli upload
@@ -75,7 +77,7 @@ const store = new Vuex.Store({
     ui:uiStrings.en,
     messages:[],
     teams:[],
-    ws,
+    connection: new SSE(),
     alwaysOnTop:false,
     favorites:[],
     bootingOther:false,
@@ -221,17 +223,17 @@ const store = new Vuex.Store({
     }
   },
   actions:{
-    addKeep({state}, messageId){
-      state.sending = true
-      state.ws.send({
-        method:'addKeep',
+    addKeep(store, messageId){
+      store.state.sending = true
+      store.dispatch('send',{
+        method:'add-keep',
         messageId
       })
     },
-    removeKeep({state}, messageId){
-      state.sending = true
-      state.ws.send({
-        method:'removeKeep',
+    removeKeep(store, messageId){
+      store.state.sending = true
+      store.dispatch('send',{
+        method:'remove-keep',
         messageId
       })
     },
@@ -239,15 +241,15 @@ const store = new Vuex.Store({
       state.sending = false
       gev.$emit('remove-keep', obj.messageId)
     },
-    getKeeps({state}){
-      state.sending = true
-      state.ws.send({
-        method:'getKeeps'
+    getKeeps(store){
+      store.state.sending = true
+      store.dispatch('send',{
+        method:'get-keeps'
       })
     },
-    getTelepath({state}){
-      state.ws.send({
-        method:'getTelepath'
+    getTelepath(store){
+      store.dispatch('send',{
+        method:'get-telepath'
       })
     },
     async gotTelepath(store, obj){
@@ -302,29 +304,29 @@ const store = new Vuex.Store({
         console.error(e)
       }
     },
-    receiveUpdateApp({state},{name}){
-      const app = state.apps.find(a=> a.name === name)
+    receiveUpdateApp(store,{name}){
+      const app = store.state.apps.find(a=> a.name === name)
       if(!app){
         return
       }
-      state.ws.send({
-        method:'checkUpdateApps',
+      store.dispatch('send',{
+        method:'check-update-apps',
         apps:[{_id:app._id, version:app.version}]
       })
     },
-    checkUpdate({state}, tgApp){
+    checkUpdate(store, tgApp){
       let apps
       if(tgApp){
         apps = [tgApp]
       }else{
-        apps = state.apps
+        apps = store.state.apps
       }
       if(!apps.length){
         return
       }
-      state.ws.send({
-        method:'checkUpdateApps',
-        apps:state.apps.map(a=>{
+      store.dispatch('send',{
+        method:'check-update-apps',
+        apps:store.state.apps.map(a=>{
           return {
             _id:a._id,
             version:a.version
@@ -332,13 +334,18 @@ const store = new Vuex.Store({
         })
       })
     },
-    login({state},{account, password, version}){
-      state.ws.send({
+    async login(store,{account, password, version, newPassword}){
+      const logined = await store.dispatch('send', {
         method:'login',
         account:account,
         pwd:password,
-        version
+        version,
+        newPassword
       })
+      if(logined.logined){
+        await store.state.connection.connect()
+      }
+      return logined
     },
     loginFailed({state}){
       gev.$emit('result-login',{
@@ -369,10 +376,10 @@ const store = new Vuex.Store({
     saveConfig(store, conf){
       return config.set(conf)
     },
-    getFile({state}, {id,download}){
-      state.sending =true
-      state.ws.send({
-        method:'getFile',
+    getFile(store, {id,download}){
+      store.state.sending =true
+      store.dispatch('send',{
+        method:'get-file',
         id,
         download
       })
@@ -410,9 +417,9 @@ const store = new Vuex.Store({
         store.dispatch('restore')
       }
     },
-    readMessage({state}, obj){
-      state.ws.send({
-        method:'addRead',
+    readMessage(store, obj){
+      store.dispatch('send', {
+        method:'add-read',
         messageId:obj.id,
         priority:obj.priority
       })
@@ -454,15 +461,15 @@ const store = new Vuex.Store({
       state.unreadCursorIndex++
       state.unreadCursorEv = setTimeout(()=>state.unreadCursorIndex = 0, UNREAD_TIMEOUT)
     },
-    requestMssageDetail({state:{ws}}, id){
-      ws.send({
-        method:'requestMessageDetail',
+    requestMssageDetail(store, id){
+      store.dispatch('send',{
+        method:'request-message-detail',
         id
       })
     },
-    requestTeamDetail({state:{ws}}, id){
-      ws.send({
-        method:'requestTeamDetail',
+    requestTeamDetail(store, id){
+      store.dispatch('send', {
+        method:'request-team-detail',
         id
       })
     },
@@ -480,7 +487,6 @@ const store = new Vuex.Store({
     },
     gotMessageDetail(store, obj){
       const {message} = obj
-      console.log(message)
       message.sender.iconUrl = store.getters.createIconUrl(message.sender._id, message.iconCache)
       message.reads.forEach(r=> r.reader.iconUrl = store.getters.createIconUrl(r.reader._id, message.iconCache))
       gev.$emit('show-message-detail', message)
@@ -556,19 +562,19 @@ const store = new Vuex.Store({
     unfoldAll(){
       gev.$emit('set-fold', false)
     },
-    revokeMessage({state}, messageId){
-      state.ws.send({
-        method:'revokeMessage',
+    revokeMessage(store, messageId){
+      store.dispatch('send',{
+        method:'revoke-message',
         messageId
       })
     },
     revokedMessage(_, obj){
       Message.revokeIt(obj)
     },
-    setMyIcon({state},iconUrl){
-      state.ws.send({
-        method:'setIcon',
-        userId:state.loginedInfo._id,
+    setMyIcon(store,iconUrl){
+      store.dispatch('send',{
+        method:'set-icon',
+        userId:store.state.loginedInfo._id,
         iconUrl
       })
     },
@@ -595,7 +601,7 @@ const store = new Vuex.Store({
           store.commit('setSending')
           const messageContent = messageParser(content)
           const message = {
-            method:'sendMessage',
+            method:'send-message',
             message:{
               type:messObj.type || 'text',
               destTeams:destTeamIds,
@@ -606,15 +612,15 @@ const store = new Vuex.Store({
               files:[]
             },
           }
-          store.state.ws.send(message)
+          store.dispatch('send',message)
           resolve(true)
         })
       })
 
     },
-    setPriority({state}, {message,priority}){
-      state.ws.send({
-        method:'setPriority', 
+    setPriority(store, {message,priority}){
+      store.dispatch('send',{
+        method:'set-priority', 
         id:message._id,
         priority
       })
@@ -640,15 +646,14 @@ const store = new Vuex.Store({
     },
     getBelongs(store,{vm, userId}){
       store.commit('addBelongsQueue', vm)
-      const {state} = store
-      state.ws.send({
-        method:'getBelongs',
+      store.dispatch('send',{
+        method:'get-belongs',
         userId
       })
     },
-    getUserInfo({state}, userId){
-      state.ws.send({
-        method:'getUserInfo',
+    getUserInfo(store, userId){
+      store.dispatch('send',{
+        method:'get-user-info',
         userId
       })
     },
@@ -677,50 +682,50 @@ const store = new Vuex.Store({
     setTeamOrder(store, order){
       const {state} = store
       state.loginedInfo.teamOrder = order
-      state.ws.send({
-        method:'setTeamOrder',
+      store.dispatch('send',{
+        method:'set-team-order',
         order
       })
       store.commit('setTeams', state.teams)
     },
-    sendLog({state}, log){
-      state.ws.send({
-        method:'sendLog',
+    sendLog(store, log){
+      store.dispatch('send',{
+        method:'send-log',
         log
       })
     },
-    updatePersonalInfo({state}){
-      state.ws.send({
-        method:'updatePersonalInfo', 
-        data:omit(state.loginedInfo, 'iconUrl')
+    updatePersonalInfo(store){
+      store.dispatch('send',{
+        method:'update-personal-info', 
+        data:omit(store.state.loginedInfo, 'iconUrl')
       })
     },
-    setIdle({state}){
-      state.idle = true
-      state.ws.send({
-        method:'setIdle'
+    setIdle(store){
+      store.state.idle = true
+      store.dispatch('send',{
+        method:'set-idle'
       })
     },
-    unsetIdle({state}){
-      state.idle = false
-      state.ws.send({
-        method:'unsetIdle'
+    unsetIdle(store){
+      store.state.idle = false
+      store.dispatch('send',{
+        method:'unset-idle'
       })
     },
     gotRecommended(_, obj){
       gev.$emit('got-recommended', obj.apps)
     },
-    async getRecommendApps({state}){
-      state.ws.send({
-        method:'getRecommended'
+    async getRecommendApps(store){
+      store.dispatch('send',{
+        method:'get-recommended'
       })
     },
-    getApp({state}, app){
-      if(state.apps.some(a=>a.name === app.name)){
+    getApp(store, app){
+      if(store.state.apps.some(a=>a.name === app.name)){
         return gev.$emit('notify-message', 'This app already installed')
       }
-      state.ws.send({
-        method:'getApp',
+      store.dispatch('send',{
+        method:'get-app',
         appId:app._id
       })
     },
@@ -729,12 +734,12 @@ const store = new Vuex.Store({
       store.dispatch('setApps')
       store.dispatch('notify', obj.app.name + ' Installation complete')
     },
-    async unregistApp({state},app){
-      if(app.author._id !== state.loginedInfo._id){
+    async unregistApp(store,app){
+      if(app.author._id !== store.state.loginedInfo._id){
         return
       }
-      state.ws.send({
-        method:'unregistApp',
+      store.dispatch('send',{
+        method:'unregist-app',
         appId:app._id
       })
     },
@@ -743,9 +748,9 @@ const store = new Vuex.Store({
       removeApp(store.state.loginedInfo.account, app)
       gev.$emit('notify-message', app.name + ' Uninstallation complete')
     },
-    async findApps({state}, text){
-      state.ws.send({
-        method:'findApps',
+    async findApps(store, text){
+      store.dispatch('send',{
+        method:'find-apps',
         search:text
       })
     },
@@ -811,8 +816,8 @@ const store = new Vuex.Store({
               return reject('Reached application size limit. App size sould be below then 15Mib.')
             }
             bin.bin = binary.toString('base64')
-            state.ws.send({
-              method:'registApp',
+            store.dispatch('send',{
+              method:'regist-app',
               app:packageObj,
               bin
             })
@@ -849,6 +854,19 @@ const store = new Vuex.Store({
     },
     gotEtc(){//ignore
   
+    },
+    async send(store, param){
+      const {method} = param
+      const tg = url.resolve(`https://${globals.SERVER}:${globals.PORT}`, method)
+      return await fetch(tg, {
+        method:'POST',
+        body:JSON.stringify({
+          userId:store.state.loginedInfo._id,
+          ...param
+        }),
+        credentials:'include',
+        mode:'cors'
+      }).then(r=>r.json())
     }
   },
   getters:{

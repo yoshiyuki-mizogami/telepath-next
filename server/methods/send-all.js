@@ -3,7 +3,7 @@ const Message = require('../message.js')
 const File = require('../file.js')
 const Read = require('../read.js')
 const User = require('../user.js')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl, res, obj)=>{
   /*replay message*/
   const {message} = obj
   const {files} = message
@@ -22,7 +22,7 @@ module.exports = async (wss, sock, obj)=>{
   newMessage.files = retFiles.map(f=>f.id)
   await newMessage.save()
   await new Read({
-    reader:sock.userId,
+    reader:cl.userId,
     message:newMessage._id
   }).save()
   const sender = await User.findOne(newMessage.sender).select('nickname')
@@ -36,7 +36,7 @@ module.exports = async (wss, sock, obj)=>{
       icon:f.icon
     }
   })
-  for(const s of wss.clients){
+  for(const s of server.clients){
     if(!s.userId){
       continue
     }

@@ -4,9 +4,9 @@ const {spawn,exec} = require('child_process')
 const mongoose = require('mongoose')
 const share = require('./param.js')
 const os = require('os')
-
+const sseServer = require('./sse-server')
 console.log('db server:', share.mongoServer, 'ws server', share.wsServer)
-const TELEPATH_PORT = share.wsPort
+const TELEPATH_PORT = share.port
 mongoose.Promise = global.Promise
 // mongoose.set('debug', true)
 const Act = require('./message-action')
@@ -16,7 +16,7 @@ connectMongo().then(Act.init)
   .then(async ()=>{
     console.log('mongo conected')
     await etc.set()
-    require('./boot-ws')(TELEPATH_PORT, Act.doAct)
+    sseServer.start(TELEPATH_PORT, Act.doAct)
   })
 
 

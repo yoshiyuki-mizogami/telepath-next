@@ -145,19 +145,25 @@ export default {
       this.specialEffect = false
       Snow.stop()
     },
-    login(){
-      if(this.setPasswordMode){
-        return this.setNewPassword()
-      }
+    async login(){
       if(!this.account || !this.password){
         return this.notifyMessage(this.ui.INPUT_NOT_ENOUGTH)
       }
       this.logining = true
-      this.$store.dispatch('login', {
+      const response = await this.$store.dispatch('login', {
         account:this.account,
         password:this.password,
+        newPassword:this.newPassword || void 0,
         version:globals.version
       })
+      if(!response.logined){
+        if(response.requireNewPassword){
+          this.logining = false
+          return this.setPasswordMode = true
+        }
+        return this.$store.dispatch('loginFailed')
+      }
+      this.logining = false
     },
     resultLogin({ok, message}){
       this.logining = false
@@ -209,11 +215,6 @@ export default {
       if(this.newPassword !== this.confirmPassword){
         return this.notifyMessage(this.ui.PASSWORD_UNMATCH)
       }
-      this.logining = true
-      this.ws.send({
-        method:'setPassword',
-        newPassword:this.newPassword
-      })
     },
     saveLoginfo(){
       const save = this.saveInfo

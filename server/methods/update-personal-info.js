@@ -1,9 +1,12 @@
 'use strict'
 const _ = require('lodash')
 const User = require('../user')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl, res, obj)=>{
+  if(!cl){
+    return
+  }
   const u = await User.findOne({
-    _id:sock.userId
+    _id:cl.userId
   })
   if(!u){
     return 

@@ -15,19 +15,19 @@ const saveIcon = (_id, iconUrl)=>{
     })
   })
 }
-module.exports = (wss, sock, obj)=>{
+module.exports = (server,cl, res, obj)=>{
   const {iconUrl} = obj
   return User.findOne({_id:obj.userId})
     .then(u=>{
       return saveIcon(u._id, iconUrl)
     }).then(()=>{
       User.updateGlobalIconCache()
-      sock.send({
+      cl.send({
         method:'settedIcon'
       })
     }).catch(e=>{
       console.error(e)
-      return sock.send({
+      return cl.send({
         method:'iconSaveFailed'
       })
     })

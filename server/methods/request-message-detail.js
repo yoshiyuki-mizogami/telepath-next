@@ -1,6 +1,6 @@
 'use strict'
 const Message = require('../message')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl, res, obj)=>{
   const message = await Message.findById(obj.id)
     .populate([{
       path:'reads',
@@ -13,7 +13,7 @@ module.exports = async (wss, sock, obj)=>{
     },{
       path:'sender priority'
     }])
-  sock.send({
+  cl.send({
     method:'gotMessageDetail',
     message
   })

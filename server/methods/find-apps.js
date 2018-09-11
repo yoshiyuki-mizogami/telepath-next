@@ -1,9 +1,9 @@
 'use strict'
 const App = require('../app')
 const User = require('../user')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server, cl,res, obj)=>{
   if(!obj.search){
-    sock.send({
+    cl.send({
       method:'foundApps',
       apps:[]
     })
@@ -23,7 +23,7 @@ module.exports = async (wss, sock, obj)=>{
     path:'author',
     select:'_id name account'
   })
-  sock.send({
+  cl.send({
     method:'foundApps',
     apps
   })

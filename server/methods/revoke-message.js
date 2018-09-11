@@ -1,9 +1,9 @@
 'use strict'
 const Message = require('../message')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl, res, obj)=>{
   const message = await Message.findOne({
     _id:obj.messageId,
-    sender:sock.userId
+    sender:cl.userId
   }).select('parent sender destTeams revoked')
     .populate({
       path:'parent',
@@ -22,7 +22,7 @@ module.exports = async (wss, sock, obj)=>{
   message.revoked = true
   const {forAll}  = message.parent || message
   await message.save()
-  for(const c of wss.clients){
+  for(const c of server.clients){
     if(!c.teams){continue}
     const teams = c.teams
     const isTarget = forAll || teams.some(t=>destTeams.includes(t))

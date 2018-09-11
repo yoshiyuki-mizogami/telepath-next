@@ -1,6 +1,6 @@
 'use strict'
 const Team = require('../team.js')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl, res, obj)=>{
   const _team = await Team.findById(obj.id)
     .populate([
       {
@@ -14,7 +14,7 @@ module.exports = async (wss, sock, obj)=>{
     ])
   const connectedUserIds = {}
   const team = _team.toObject()
-  for(const c of wss.clients){
+  for(const c of server.clients){
     if(c.root){
       continue
     }
@@ -28,7 +28,7 @@ module.exports = async (wss, sock, obj)=>{
       u.idle = sock.idle
     }
   })
-  sock.send({
+  cl.send({
     method:'gotTeamDetail',
     team
   })

@@ -1,15 +1,13 @@
 'use strict'
 const App = require('../app')
-const path = require('path')
-const fs = require('fs')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server, cl, res, obj)=>{
   const app = await App.findOne({_id:obj.appId})
     .populate({
       path:'author',
       select:'_id name account'
     })
-  if(app.author._id.toString() !== sock.userId){
-    return sock.send({
+  if(app.author._id.toString() !== cl.userId){
+    return cl.send({
       method:'receiveNotify',
       level:'warn',
       message:{
@@ -19,7 +17,7 @@ module.exports = async (wss, sock, obj)=>{
     })
   }
   await app.unregist()
-  return sock.send({
+  return cl.send({
     method:'receiveNotify',
     level:'warn',
     message:{

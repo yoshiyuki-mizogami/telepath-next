@@ -1,14 +1,14 @@
 'use strict'
 const User = require('../user.js')
 const NOT_FOUND = -1
-module.exports = async (_, sock, obj)=>{
-  const target = await User.findById(sock.userId).select({keeps:true})
+module.exports = async (_, cl, res, obj)=>{
+  const target = await User.findById(res.userId).select({keeps:true})
   const {keeps} = target
   const pos = keeps.findIndex(k=>{
     return k._id === obj.messageId
   })
   if(pos === NOT_FOUND){
-    return sock.send({
+    return cl.send({
       method:'receiveNotify',
       level:'warn',
       messageName:'ALREADY_REMOVED_IT',
@@ -20,7 +20,7 @@ module.exports = async (_, sock, obj)=>{
   }
   keeps.splice(pos, 1)
   await target.save()
-  sock.send({
+  cl.send({
     method:'receiveNotify',
     level:'success',
     message:{
@@ -28,7 +28,7 @@ module.exports = async (_, sock, obj)=>{
       ja:'Keepが削除されました'
     }
   })
-  sock.send({
+  cl.send({
     method:'removedKeep',
     messageId:obj.messageId
   })

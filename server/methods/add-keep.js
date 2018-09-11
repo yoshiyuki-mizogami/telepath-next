@@ -3,7 +3,7 @@ const User = require('../user.js')
 const Message = require('../message.js')
 const File = require('../file.js')
 const KEEP_LIMIT = 300
-module.exports = async (_, sock, obj)=>{
+module.exports = async (server, cl, res, obj)=>{
   const message = await Message.findById(
     obj.messageId
   ).select({
@@ -12,7 +12,7 @@ module.exports = async (_, sock, obj)=>{
     destTeams:false
   })
   if(message.revoked){
-    return sock.send({
+    return cl.send({
       method:'receiveNotify', 
       level:'err',
       message:{
@@ -21,10 +21,10 @@ module.exports = async (_, sock, obj)=>{
       }
     })
   }
-  const target = await User.findById(sock.userId)
+  const target = await User.findById(res.userId)
 
   if( KEEP_LIMIT <= target.keeps.length){
-    return sock.send({
+    return cl.send({
       method:'receiveNotify', 
       level:'err',
       message:{
@@ -34,7 +34,7 @@ module.exports = async (_, sock, obj)=>{
     })
   }
   if(target.keeps.find(k=>k._id === obj.messageId)){
-    return sock.send({
+    return cl.send({
       method:'receiveNotify',
       level:'err',
       message:{
@@ -59,7 +59,7 @@ module.exports = async (_, sock, obj)=>{
   target.keeps.push(mobject)
   /*same user other connection ignore*/
   await target.save()
-  sock.send({
+  cl.send({
     method:'receiveNotify',
     level:'sucess',
     message:{

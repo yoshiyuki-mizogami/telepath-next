@@ -2,16 +2,16 @@
 const Message = require('../message')
 const File = require('../file')
 const User = require('../user')
-const Read = require('../read.js')
+const Read = require('../read')
 function getReplyFrom(_id){
   return Message.findOne({_id})
 }
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server, cl, res, obj)=>{
   /*replay message*/
   const {message} = obj
   let {destTeams} = message
   const {files} = message
-  const from = sock.userId
+  const from = cl.userId
   let p
   let replySorceUserId
   let fromAll = false
@@ -43,7 +43,7 @@ module.exports = async (wss, sock, obj)=>{
   newMessage.files = retFiles.map(f=>f.id)
   await newMessage.save()
   await new Read({
-    reader:sock.userId,
+    reader:cl.userId,
     message:newMessage._id
   }).save()
   const sender = await User.findOne(newMessage.sender).select('name nickname')
@@ -63,7 +63,7 @@ module.exports = async (wss, sock, obj)=>{
     method:'receiveMessage',
     message:newMess
   })
-  for(const s of wss.clients){
+  for(const s of server.clients){
     if(!s.teams){
       continue
     }

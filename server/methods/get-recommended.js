@@ -1,6 +1,6 @@
 'use strict'
 const App = require('../app')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server,cl)=>{
   const apps = await App.find({
     download:{$gte:10}
   }).sort({download:-1}).limit(10)
@@ -8,7 +8,7 @@ module.exports = async (wss, sock, obj)=>{
       path:'author',
       select:'_id name account'
     })
-  sock.send({
+    cl.send({
     method:'gotRecommended',
     apps
   })

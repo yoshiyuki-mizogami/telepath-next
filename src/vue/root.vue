@@ -356,7 +356,7 @@ const {Menu} = remote
 const thisWindow = remote.getCurrentWindow()
 const noop = ()=>{}
 /*for performance */
-const TELEPATH_PORT = globals.WS_PORT
+
 const actions = {
   methods:mapActions([
     'checkUnread',
@@ -379,7 +379,7 @@ export default {
     ui:'ui',
     connected:'connected',
     loginedInfo:'loginedInfo',
-    ws:'ws',
+    connection:'connection',
     teams:'teams',
     config:'config',
     messages:'messages',
@@ -435,14 +435,15 @@ export default {
         this.$store.state.favorites = favorites
       })
     gev.$on('check-unread', this.checkUnread)
-    const ws = this.ws
+    const connection = this.connection
     await this.$store.dispatch('initConfig')
     gev.$on('get-selected-teams', this.getSelectedTeams)
-    ws.setConfig({
-      url:'wss://' + globals.WS_SERVER,
-      port:TELEPATH_PORT
+    connection.setConfig({
+      url:'https://' + globals.SERVER,
+      port:globals.PORT
     })
-    ws.setMethods(obj=>{
+    connection.setMethods(obj=>{
+      console.log(obj)
       this.$store.dispatch(obj.method, obj)
     })
     gev.$on('set-search-enter', tag=>{
@@ -450,7 +451,7 @@ export default {
       this.searchTxt = tag
     })
     gev.addLayer(this)
-    ws.on('close', ()=>{
+    connection.on('close', ()=>{
       gev.$emit('show-dialog', this.ui.LOST_CONNECTION,{
         okCaption:this.ui.EXIT,
         ok:this.close
@@ -458,12 +459,11 @@ export default {
       this.$store.commit('setConnect', false)
       this.$store.dispatch('setApps')
     })
-    ws.on('open', ()=>{
+    connection.on('open', ()=>{
       this.$store.commit('setConnect', true)
-      gev.$emit('hide-dialog')
-      gev.$emit('show-login-form')
     })
-    await ws.connect()
+    gev.$emit('hide-dialog')
+    gev.$emit('show-login-form')
   },
   mounted(){
     thisWindow.show()
@@ -570,7 +570,7 @@ export default {
       return this.$refs.fileAttacher.getFiles()
         .then(files=>{
           const message = {
-            method:'sendMessage',
+            method:'send-message',
             message:{
               type:overwriteType || messageContent.type,
               destTeams:destTeamIds,
@@ -581,7 +581,7 @@ export default {
               files
             },
           }
-          this.ws.send(message)
+          this.$store.dispatch('send',message)
         })
     },
     filterMessage(){

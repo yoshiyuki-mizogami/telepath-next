@@ -1,24 +1,23 @@
 'use strict'
 const App = require('../app')
-module.exports = async (wss, sock, obj)=>{
+module.exports = async (server, cl, res, obj)=>{
   try{
     const app = await App.registApp(obj.app, obj.bin)
-    sock.send({
+    cl.send({
       method:'registedApp',
       app
     })
-    advertiseAppUpdate(wss, app.name)
+    advertiseAppUpdate(server, app.name)
   }catch(e){
-    return sock.send({
+    return cl.send({
       method:'receiveNotify',
       level:'warn',
       message:e
     })
   }
 }
-
-function advertiseAppUpdate(wss, name){
-  for(const c of wss.clients){
+function advertiseAppUpdate(server, name){
+  for(const c of server.clients){
     c.send({
       method:'receiveUpdateApp',
       name

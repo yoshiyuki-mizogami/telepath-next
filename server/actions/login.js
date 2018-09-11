@@ -6,30 +6,30 @@ Etc.set().then(()=>{
   currentVersion = Etc.get().version || currentVersion
 })
 const logined = require('./logined.js')
-const getTelepath = require('./get-telepath.js')
 
-module.exports = async (wss, sock, obj)=>{
+module.exports = async function login(server, res, obj){
   queueManager.queue(async ()=>{
     const u = await User.findOne({
       account:obj.account,
       pwd:obj.pwd
     }).select('_id name account lastLogin nickname tel mail depart pwd message teamOrder iconCache')
+    console.log('user', u)
     if(!u){
-      return sock.send({method:'loginFailed'})
+      return res.send({method:'loginFailed'})
     }
-    sock.logined = true
-    sock.userId = u._id.toString()
+    res.logined = true
+    res.userId = u._id.toString()
     /*for first login*/
     if(!u.lastLogin){
-      return sock.send({
+      return res.send({
         method:'requireNewPassword'
       })
     }
     if(obj.version && semver.lt(obj.version, currentVersion)){
-      getTelepath(wss, sock)
+      //getTelepath(server, res)
     }
-    sock.idle = false
-    await logined(sock, u, obj.nomessage)
+    res.idle = false
+    await logined(res, u, obj.nomessage)
     u.lastLogin = new Date()
     if(obj.version !== '100.0.0'){
       u.version = obj.version
@@ -48,6 +48,7 @@ const queueManager = (()=>{
         return
       }
       const target = queue.shift()
+      console.log('target fnc', target)
       if(!target){
         return
       }

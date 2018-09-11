@@ -183,7 +183,7 @@ export default {
       this.$refs.fileAttacher.getFiles()
         .then(files=>{
           const message = {
-            method:'sendMessage',
+            method:'send-message',
             message:{
               type:overwriteMessageType || messageContent.type,
               parent:this.m.parent,
@@ -193,7 +193,7 @@ export default {
               files
             }
           }
-          this.ws.send(message)
+          this.$store.dispatch('send',message)
         })
       this.clearReply()
     },
