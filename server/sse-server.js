@@ -69,7 +69,7 @@ class SSEServer extends events{
       req.setEncoding(UTF8)
       const result = []
       req.on('data', d=> result.push(d))
-      req.on('end', ()=>{
+      req.on('end', async ()=>{
         const json = JSON.parse(result.join(''))
         const {userId} = json
         let tgClient
