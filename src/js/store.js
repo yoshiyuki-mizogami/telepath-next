@@ -644,17 +644,10 @@ const store = new Vuex.Store({
       store.commit('addNewMessage', obj)
       Vue.nextTick(()=>store.dispatch('checkUnread'))
     },
-    getBelongs(store,{vm, userId}){
-      store.commit('addBelongsQueue', vm)
-      store.dispatch('send',{
-        method:'get-belongs',
-        userId
-      })
-    },
     getUserInfo(store, userId){
       store.dispatch('send',{
         method:'get-user-info',
-        userId
+        targetUserId:userId
       })
     },
     gotUserInfo(_, obj){
