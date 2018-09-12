@@ -20,12 +20,14 @@
 <body>
   <h1>Hello Telepath Click to continue.</h1>
   <script>
-    document.documentElement.addEventListener('click',()=>{
-      const el = require('electron')
+    function moveTelepath(){
+      const el = require('electron'))
       const index = el.remote.getGlobal('index')
       const w = el.remote.getCurrentWindow()
       w.loadFile(index)
-    })
+    }
+    setTimeout(moveTelepath, 100)
+    document.documentElement.addEventListener('click',moveTelepath)
   </script>
 </body>
 </html>
