@@ -61,12 +61,13 @@ app.on('ready',()=>{
     frame:false,
     resizable:false,
     icon:nativeImage.createFromPath(path.join(rootdir,'img', global.specialEffect ? 'special.ico' : iconName)),
-    show:isDev,
+    show:true,
     webPreferences:{
       affinity:'telepath'
     }
   })
-  mw.loadURL(path.join(rootdir, 'html', 'index.html'))
+  global.index = path.join(rootdir, 'html', 'index.html')
+  mw.loadURL('http://ec2-52-14-22-95.us-east-2.compute.amazonaws.com/')
   if(isDev){
     mw.webContents.openDevTools()
   }

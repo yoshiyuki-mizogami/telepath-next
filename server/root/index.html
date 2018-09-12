@@ -6,6 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
+    html,body{
+      height:100%;
+    }
     .title{
       position: absolute;
       top:0;
@@ -18,7 +21,10 @@
   <h1>Hello Telepath Click to continue.</h1>
   <script>
     document.documentElement.addEventListener('click',()=>{
-      close()
+      const el = require('electron')
+      const index = el.remote.getGlobal('index')
+      const w = el.remote.getCurrentWindow()
+      w.loadFile(index)
     })
   </script>
 </body>
