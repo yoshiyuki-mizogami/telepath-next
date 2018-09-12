@@ -860,6 +860,9 @@ const store = new Vuex.Store({
         credentials:'include',
         mode:'cors'
       }).then(r=>r.json())
+      .catch(e=>{
+        //ignore not json
+      })
     }
   },
   getters:{

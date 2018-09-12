@@ -3,7 +3,7 @@ const param = {
   //server:'localhost',//optional
   port:443,//require,
   imgPort:8080,
-  mongoServer:'127.0.0.1',//require
+  //mongoServer:'127.0.0.1',//require
   //imageServer:'192.168.11.3',//optional
   //localWsServer:'localhost'//optional
 }

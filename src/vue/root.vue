@@ -443,7 +443,6 @@ export default {
       port:globals.PORT
     })
     connection.setMethods(obj=>{
-      console.log(obj)
       this.$store.dispatch(obj.method, obj)
     })
     gev.$on('set-search-enter', tag=>{
