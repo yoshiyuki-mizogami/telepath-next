@@ -12,15 +12,12 @@ SSEClient.prototype.send = function(d){
   this._send(str)
 }
 const http = require('http')
-const https = require('https')
 const {ServerResponse} = http
 ServerResponse.prototype._end = ServerResponse.prototype.end
 ServerResponse.prototype.end = function(obj){
   this._end(JSON.stringify(obj))
 }
 
-const {readFile} = require('fs').promises
-const path = require('path')
 const UTF8 = 'utf8'
 const DEFAULT_HEADER = {'Content-Type':'text/plain'}
 const KEEPINTERVAL = 30 * 1000 // 30 seconds
@@ -53,11 +50,7 @@ class SSEServer extends events{
   async start(port){
     await this.setMethod()
     this.keepTimer()
-    const pfx = await readFile(path.join(__dirname, 'crt', 'mine.pfx'))
-    const server = https.createServer({
-      pfx,
-      passphrase:'export'
-    }, (req, res)=>{
+    const server = http.createServer((req, res)=>{
       const urlPath = req.url
       const method = this.methods[urlPath]
       if(!method){

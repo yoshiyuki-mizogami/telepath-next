@@ -12,7 +12,6 @@ class Connection extends EventEmitter{
   }
   setConfig(config){
     this.url = config.url
-    this.port = config.port
   }
   setMethods(fnc){
     this.fnc = fnc
@@ -29,7 +28,7 @@ class Connection extends EventEmitter{
     }
   }
   connect(){
-    const sse = new EventSource(`${this.url}:${this.port}/sse`,{
+    const sse = new EventSource(`${this.url}/sse`,{
       withCredentials:true
     })
     this.sse = sse

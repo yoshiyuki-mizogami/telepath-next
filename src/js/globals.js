@@ -11,8 +11,10 @@ const specialEffect = remote.getGlobal('specialEffect')
 const {nativeImage} = remote
 const imgDir = join(rootdir, 'img')
 const HELP_PAGE = 'http://help-page'
+const PROTOCOL = param.protocol
 const SERVER = connectLocal ? param.localServer : param.server
 const PORT = param.port
+const BASE_URL = `${PROTOCOL}://${SERVER}:${PORT}`
 const IMAGE_SERVER = param.imageServer
 // const WS_SERVER = 'localhost' // dev
 const overlays = ['1','2','3','4','5','6','7','8','9','9over'].reduce((b, i)=>{
@@ -48,6 +50,7 @@ export default {
   },
   SERVER,
   PORT,
+  BASE_URL,
   IMAGE_SERVER,
   /* sort order thread/comment D:decend A:ascend*/
   SORT_ORDER:{

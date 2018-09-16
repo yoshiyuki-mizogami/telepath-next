@@ -1,4 +1,5 @@
 const param = {
+  protocol:'http',
   server:'ec2-52-14-22-95.us-east-2.compute.amazonaws.com',
   //server:'localhost',//optional
   port:443,//require,

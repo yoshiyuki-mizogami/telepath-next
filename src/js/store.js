@@ -850,7 +850,7 @@ const store = new Vuex.Store({
     },
     async send(store, param){
       const {method} = param
-      const tg = url.resolve(`https://${globals.SERVER}:${globals.PORT}`, method)
+      const tg = url.resolve(globals.BASE_URL, method)
       return await fetch(tg, {
         method:'POST',
         body:JSON.stringify({
@@ -860,9 +860,9 @@ const store = new Vuex.Store({
         credentials:'include',
         mode:'cors'
       }).then(r=>r.json())
-      .catch(e=>{
-        //ignore not json
-      })
+        .catch(e=>{
+          //ignore not json
+        })
     }
   },
   getters:{

@@ -439,8 +439,7 @@ export default {
     await this.$store.dispatch('initConfig')
     gev.$on('get-selected-teams', this.getSelectedTeams)
     connection.setConfig({
-      url:'https://' + globals.SERVER,
-      port:globals.PORT
+      url:globals.BASE_URL
     })
     connection.setMethods(obj=>{
       this.$store.dispatch(obj.method, obj)
