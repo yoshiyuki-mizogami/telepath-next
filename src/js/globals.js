@@ -16,6 +16,7 @@ const SERVER = connectLocal ? param.localServer : param.server
 const PORT = param.port
 const BASE_URL = `${PROTOCOL}://${SERVER}:${PORT}`
 const IMAGE_SERVER = param.imageServer
+const IMAGE_SERVER_PORT = param.imgPort
 // const WS_SERVER = 'localhost' // dev
 const overlays = ['1','2','3','4','5','6','7','8','9','9over'].reduce((b, i)=>{
   b[i] = nativeImage.createFromPath(join(imgDir, `${i}._png`))
@@ -52,6 +53,7 @@ export default {
   PORT,
   BASE_URL,
   IMAGE_SERVER,
+  IMAGE_SERVER_PORT,
   /* sort order thread/comment D:decend A:ascend*/
   SORT_ORDER:{
     DD:0,

@@ -1,6 +1,6 @@
 {
   "name": "telepath-next-cloud",
-  "version": "1.9.1",
+  "version": "1.9.3",
   "description": "telepath next app",
   "main": "index.js",
   "scripts": {

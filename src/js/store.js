@@ -867,10 +867,10 @@ const store = new Vuex.Store({
   },
   getters:{
     createIconUrl:()=>(id, iconCache)=>{
-      return 'http://' + globals.IMAGE_SERVER + ':80/icons/' + id + '.png?' + iconCache
+      return `http://${globals.IMAGE_SERVER}:${globals.IMAGE_SERVER_PORT}/icons/${id}.png?${iconCache}`
     },
     createAppUrl:()=>(name, iconCache)=>{
-      return 'http://' + globals.IMAGE_SERVER + ':80/apps/' + name + '/icon.png?' + iconCache
+      return `http://${globals.IMAGE_SERVER}:${globals.IMAGE_SERVER_PORT}/apps/${name}/icon.png?${iconCache}`
     },
     shortcutApps(state){
       return state.apps.filter(app=>app.shortcut).splice(0,5)

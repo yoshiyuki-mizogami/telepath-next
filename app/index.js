@@ -67,7 +67,7 @@ app.on('ready',()=>{
     }
   })
   global.index = path.join(rootdir, 'html', 'index.html')
-  mw.loadURL('http://ec2-52-14-22-95.us-east-2.compute.amazonaws.com/')
+  mw.loadURL('http://ec2-52-14-22-95.us-east-2.compute.amazonaws.com:8080')
   if(isDev){
     mw.webContents.openDevTools()
   }

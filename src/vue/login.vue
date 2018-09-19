@@ -90,9 +90,12 @@
 import gev from '../js/g-event'
 import globals from '../js/globals'
 import {mapState} from 'vuex'
+import {remote} from 'electron'
 import Snow from '../js/util/snow.js'
+import layer from '../js/util/layer'
 const MESSAGE_TIMEOUT = 10000
 export default {
+  mixins:[layer],
   data(){
     return {
       show:false,
@@ -114,6 +117,11 @@ export default {
     gev.$on('show-login-form', this.showMe)
     gev.$on('set-new-password', this.setPassword)
     gev.$on('result-login', this.resultLogin)
+    this.setShortcut({
+      F12:()=>{
+        remote.getCurrentWindow().openDevTools()
+      }
+    })
   },
   mounted(){
     this.startEffect()
