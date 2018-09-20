@@ -28,7 +28,7 @@
     "asar": "^0.14.3",
     "css-loader": "^1.0.0",
     "del": "^3.0.0",
-    "electron": "^3.0.0-beta.10",
+    "electron": "^3.0.0-beta.13",
     "electron-builder": "^20.28.4",
     "file-loader": "^2.0.0",
     "gulp": "^3.9.1",

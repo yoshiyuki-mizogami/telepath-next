@@ -850,13 +850,13 @@ const store = new Vuex.Store({
     },
     async send(store, param){
       const {method} = param
-      const tg = url.resolve(globals.BASE_URL, method)
+      let tg = url.resolve(globals.BASE_URL, method)
+      tg += '?' + encodeURIComponent(JSON.stringify({
+        userId:store.state.loginedInfo._id,
+        ...param
+      }))
       return await fetch(tg, {
-        method:'POST',
-        body:JSON.stringify({
-          userId:store.state.loginedInfo._id,
-          ...param
-        }),
+        method:'GET',
         credentials:'include',
         mode:'cors'
       }).then(r=>r.json())

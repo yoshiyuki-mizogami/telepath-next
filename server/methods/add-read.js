@@ -17,11 +17,11 @@ module.exports = (server, cl, res, obj)=>{
       }
       const messageSenderId = message.sender.toString()
       const destTeams = dt.map(d=>d.toString())
-      if(!res.userId){
+      if(!cl.userId){
         console.log('socket user id not found')
         return
       }
-      message.addRead(res.userId,obj.priority).then(read=>{
+      message.addRead(cl.userId,obj.priority).then(read=>{
         /*return read user only*/
         if(message.revoked || MESSAGE_READ_COUNT_LIMIT < message.readCount){
           cl.send({

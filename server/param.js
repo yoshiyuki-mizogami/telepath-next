@@ -8,7 +8,12 @@ const param = {
   imageServer:'ec2-52-14-22-95.us-east-2.compute.amazonaws.com',//optional
   //localWsServer:'localhost'//optional
 }
-
+console.log('test')
+const dev = !!process.env.TELEPATH_DEV
+if(dev){
+  param.server = 
+  param.imageServer = 'localhost'
+}
 /* optional setting overwrite base server address if not provide */
 if(!param.server){
   throw new Error('server parameter not set. Require it')

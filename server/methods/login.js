@@ -26,7 +26,7 @@ module.exports = async function login(server,cl, res, obj){
   const hash = uuid(idStr + Date.now(), uuid.DNS)
   u.session = hash
   await u.save()
-  res.setHeader('Set-Cookie',`session=${hash},_id=${idStr}`)
+  res.writeHead(200, {'Set-Cookie':`session=${hash},_id=${idStr}`, 'Content-Type':'application/json'})
   res.end({
     logined:true
   })

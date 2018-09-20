@@ -3,6 +3,7 @@ const {join, basename} = require('path')
 const methodDir = join(__dirname, 'methods')
 const {readdir} = require('fs').promises
 const User = require('./user')
+const url = require('url')
 const logined = require('./actions/logined')
 const SSE = require('sse')
 const SSEClient = require('sse/lib/sseclient')
@@ -41,7 +42,9 @@ class SSEServer extends events{
   }
   async setMethod(){
     const methods = await readdir(methodDir)
-    methods.forEach(m=>{
+    methods.filter(f=>{
+      return f.endsWith('.js')
+    }).forEach(m=>{
       const tgpath = join(methodDir, m)
       const methodName = '/' + basename(tgpath, '.js')
       this.methods[methodName] = require(tgpath)
@@ -50,33 +53,41 @@ class SSEServer extends events{
   async start(port){
     await this.setMethod()
     this.keepTimer()
-    const server = http.createServer((req, res)=>{
-      const urlPath = req.url
+    const server = http.createServer(async (req, res)=>{
+      const parsed = url.parse(req.url)
+      const {
+        pathname:urlPath,
+        query
+       } = parsed
       const method = this.methods[urlPath]
       if(!method){
         console.log('unknown request', urlPath)
-        res.setHeader('Content-Type', DEFAULT_HEADER)
+        res.writeHead(200, DEFAULT_HEADER)
         res.end('unknown header')
         return
       }
-      req.setEncoding(UTF8)
-      const result = []
-      req.on('data', d=> result.push(d))
-      req.on('end', async ()=>{
-        const json = JSON.parse(result.join(''))
-        const {userId} = json
-        let tgClient
-        for(const c of this.clients){
-          if(c.userId === userId){
-            tgClient = c
-            break
-          }
-        }
-        await method(this, tgClient, res, json)
+      if(!query){
+        res.writeHead(200,{'Content-Type':'text/html'})
+        method(this, null, res)
         if(!res.finished){
-          res._end('')
+          res.end('')
         }
-      })
+        return
+      }
+      const json = JSON.parse(decodeURIComponent(query))
+      const {userId} = json
+      let tgClient
+      for(const c of this.clients){
+        if(c.userId === userId){
+          tgClient = c
+          break
+        }
+      }
+      await method(this, tgClient, res, json)
+      if(!res.finished){
+        res.writeHead(200, DEFAULT_HEADER)
+        res.end('')
+      }
     }).listen(port, ()=>{
       const sse = new SSE(server)
       this.sse = sse
